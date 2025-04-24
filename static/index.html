@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能聊天系统</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入highlight.js (代码高亮) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- 引入KaTeX (数学公式) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <!-- Markdown-it 和 texmath 用于Markdown和KaTeX解析 -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.3.2/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@0.9.1/texmath.min.js"></script>
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <button id="newChatBtn" class="new-chat-btn">
+                    <i class="fas fa-plus"></i> 新建聊天
+                </button>
+            </div>
+            
+            <div class="conversation-list" id="conversationList">
+                <!-- 聊天历史将通过JavaScript动态添加 -->
+            </div>
+        </aside>
+        
+        <!-- 主聊天区域 -->
+        <main class="main-container">
+            <header class="chat-header">
+                <h1>智能聊天系统</h1>
+                <p>强大的AI对话平台</p>
+            </header>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message system">
+                        <div class="message-content">
+                            <p>欢迎使用智能聊天系统！请在下方输入你的问题。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <form id="chatForm">
+                        <textarea id="userInput" placeholder="输入你的问题..." rows="3"></textarea>
+                        <button type="submit" id="sendButton">发送</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 

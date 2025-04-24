@@ -1,0 +1,51 @@
+# Eino服务配置
+
+# 服务器配置
+[server]
+port = 8080
+host = "0.0.0.0"
+enable_cors = true
+shutdown_timeout = "5s"
+
+# OpenAI API配置
+[openai]
+# 请设置你的API密钥
+api_key = "312d0839-b96d-4ad4-9d45-af44d13e7963"  # 或者设置环境变量OPENAI_API_KEY
+model_id = "deepseek-v3-250324"
+# 可以设置自定义API地址（比如国内镜像）
+base_url = "https://ark.cn-beijing.volces.com/api/v3"  # 或者设置环境变量OPENAI_BASE_URL
+max_tokens = 4096
+
+# 聊天配置
+[chat]
+system_prompt = "你是一个有帮助的AI助手，提供准确、有用的回答。尽量简短回复"
+max_history_length = 20
+
+# 日志配置
+log_path = "logs/app.log" 
+
+# MCP配置
+[mcp]
+enabled = true
+
+[httpclient]
+config = "http://192.168.3.36:8081"
+
+# MCP客户端列表
+[[mcp.clients]]
+name = "curtime"
+enabled = false
+url = "http://localhost:12345/sse"
+description = "Current Time MCP Server"
+
+[[mcp.clients]]
+name = "deviceServer"
+enabled = false
+url = "http://localhost:8081/sse"
+description = "Device Manager MCP Server" 
+
+[[mcp.clients]]
+name = "playwright"
+enabled = false
+url = "http://localhost:8931/sse"
+description = "playwright MCP Server" 
