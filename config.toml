@@ -10,10 +10,13 @@ shutdown_timeout = "5s"
 # OpenAI API配置
 [openai]
 # 请设置你的API密钥
-api_key = "312d0839-b96d-4ad4-9d45-af44d13e7963"  # 或者设置环境变量OPENAI_API_KEY
-model_id = "deepseek-v3-250324"
+#api_key = "312d0839-b96d-4ad4-9d45-af44d13e7963"  # 或者设置环境变量OPENAI_API_KEY
+api_key = "ollama"
+#model_id = "deepseek-v3-250324"
+model_id = "qwen3:latest"
 # 可以设置自定义API地址（比如国内镜像）
-base_url = "https://ark.cn-beijing.volces.com/api/v3"  # 或者设置环境变量OPENAI_BASE_URL
+#base_url = "https://ark.cn-beijing.volces.com/api/v3"  # 或者设置环境变量OPENAI_BASE_URL
+base_url = "http://localhost:11434/v1"
 max_tokens = 4096
 
 # 聊天配置
@@ -29,7 +32,8 @@ log_path = "logs/app.log"
 enabled = true
 
 [httpclient]
-config = "http://192.168.3.36:8081"
+config = "http://localhost:8081"
+#config = "http://192.168.3.36:8081"
 
 # MCP客户端列表
 [[mcp.clients]]

@@ -26,6 +26,7 @@ import (
 	"coder/internal/tools/editfield"
 	"coder/internal/tools/editoperation"
 	"coder/internal/tools/editsearch"
+	"coder/internal/tools/genfield"
 	"coder/internal/tools/savemodule"
 	"coder/internal/tools/viewmodule"
 )
@@ -207,6 +208,15 @@ func (tm *ToolManager) Initialize(ctx context.Context) error {
 	}
 	if err := tm.RegisterTool(ctx, deleteAPITool); err != nil {
 		return fmt.Errorf("failed to register delete API tool: %w", err)
+	}
+
+	// 初始化删除API工具
+	genfieId, err := genfield.NewGenFieldTool()
+	if err != nil {
+		return fmt.Errorf("failed to initialize genfieId tool: %w", err)
+	}
+	if err := tm.RegisterTool(ctx, genfieId); err != nil {
+		return fmt.Errorf("failed to register genfieId tool: %w", err)
 	}
 
 	log.Printf("Tool manager initialized with %d tools", len(tm.tools))

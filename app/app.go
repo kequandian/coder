@@ -10,13 +10,17 @@ import (
 
 // App represents the application container for shared resources
 var (
-	Config       *config.Config
+	// Config 存储应用程序的全局配置信息
+	Config *config.Config
+	// ConfigClient 是用于与配置服务通信的HTTP客户端
 	ConfigClient *HTTPClient
 )
 
 // HTTPClient represents a configured HTTP client with its own base URL
 type HTTPClient struct {
-	Client  *http.Client
+	// Client 是标准HTTP客户端实例
+	Client *http.Client
+	// BaseURL 是HTTP客户端的基础URL
 	BaseURL string
 }
 
