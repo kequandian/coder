@@ -100,9 +100,15 @@ func (t *GenFieldTool) InvokableRun(ctx context.Context, args string, _ ...tool.
 	// Save to cache
 	userReq, ok := ctx.Value(config.StateKey).(*api.ChatRequest)
 	if ok {
+		cacheKey := cache.CacheKey(userReq.ConversationID)
+		fmt.Printf("Saving to cache with key: %s\n", cacheKey)
+		fmt.Printf("Cache content: %+v\n", entityConfig)
+
 		jsonCur, _ := json.Marshal(entityConfig)
-		moduleCache := cache.NewModuleCacheData("", "", "", string(jsonCur))
-		cache.ModuleCacheInstance.Set(cache.CacheKey(userReq.ConversationID), moduleCache, cache.DefaultCacheExpiration)
+		entityName, _ := json.Marshal(params.Entity)
+		attributes, _ := json.Marshal(params.Attributes)
+		moduleCache := cache.NewEntityCacheData(string(entityName), string(attributes), string(jsonCur))
+		cache.EntityCacheInstance.Set(cacheKey, moduleCache, cache.DefaultCacheExpiration)
 	}
 
 	return string(result), nil

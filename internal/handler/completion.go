@@ -90,20 +90,31 @@ func (h *Handler) handleStreamingResponse(ctx context.Context, w http.ResponseWr
 	cacheKey := cache.CacheKey(req.ConversationID)
 	info, ok := cache.ModuleCacheInstance.Get(cacheKey)
 	if ok {
-		// 添加模块名称 模块代码
-		infoCache := info.(*cache.ModuleCacheData)
-		chatHistory = append(chatHistory, &schema.Message{
-			Role:    "user",
-			Content: "模块名称：" + infoCache.ModuleName + "，模块代码：" + infoCache.ModuleCode,
-		})
-		chatHistory = append(chatHistory, &schema.Message{
-			Role:    "user",
-			Content: fmt.Sprintf("这个是当前模块约束的配置，所有增加都需要在该配置里：%s", infoCache.Support),
-		})
-		chatHistory = append(chatHistory, &schema.Message{
-			Role:    "user",
-			Content: fmt.Sprintf("这个是最新的配置，所有的调整都是基于该配置调整的：%s", infoCache.Cur),
-		})
+		// 根据缓存数据类型添加不同的上下文信息
+		switch v := info.(type) {
+		case *cache.ModuleCacheData:
+			chatHistory = append(chatHistory, &schema.Message{
+				Role:    "user",
+				Content: "模块名称：" + v.ModuleName + "，模块代码：" + v.ModuleCode,
+			})
+			chatHistory = append(chatHistory, &schema.Message{
+				Role:    "user",
+				Content: fmt.Sprintf("这个是当前模块约束的配置，所有增加都需要在该配置里：%s", v.Support),
+			})
+			chatHistory = append(chatHistory, &schema.Message{
+				Role:    "user",
+				Content: fmt.Sprintf("这个是最新的配置，所有的调整都是基于该配置调整的：%s", v.Cur),
+			})
+		case *cache.EntityCacheData:
+			chatHistory = append(chatHistory, &schema.Message{
+				Role:    "user",
+				Content: "实体名称：" + v.EntityName,
+			})
+			chatHistory = append(chatHistory, &schema.Message{
+				Role:    "user",
+				Content: fmt.Sprintf("实体相关配置：%s", v.Config),
+			})
+		}
 	}
 
 	sr, err := h.agent.Stream(ctx, req, app.Config.Chat.SystemPrompt, chatHistory, userQuery)
