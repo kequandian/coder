@@ -32,7 +32,7 @@ func (t *GenFieldTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 				Required: true,
 			},
 			"attributes": {
-				Desc:     "An array of field definitions, each containing attributeName (must be in English), componentType (e.g. input, select), fieldName, fieldType (e.g. string, number), placeholder and required",
+				Desc:     "An array of field definitions, each containing attributeName (must be in English), componentType (e.g. input, select), fieldName, fieldType (e.g. string, number), placeholder and required. When componentType is select, must include options field.",
 				Type:     schema.Array,
 				Required: true,
 			},
@@ -55,18 +55,20 @@ func (t *GenFieldTool) InvokableRun(ctx context.Context, args string, _ ...tool.
 			Note       string `json:"note"`
 		} `json:"entity"`
 		Attributes []struct {
-			AttributeName string `json:"attributeName"`
-			ComponentType string `json:"componentType"`
-			FieldName     string `json:"fieldName"`
-			FieldType     string `json:"fieldType"`
-			Placeholder   string `json:"placeholder"`
-			Required      bool   `json:"required"`
+			AttributeName string              `json:"attributeName"`
+			ComponentType string              `json:"componentType"`
+			FieldName     string              `json:"fieldName"`
+			FieldType     string              `json:"fieldType"`
+			Placeholder   string              `json:"placeholder"`
+			Required      bool                `json:"required"`
+			Options       []map[string]string `json:"options,omitempty"`
 		} `json:"attributes"`
 	}
 
 	if err := json.Unmarshal([]byte(args), &params); err != nil {
 		return "", fmt.Errorf("failed to parse arguments: %w", err)
 	}
+	fmt.Printf("Parsed arguments: entity=%+v, attributes count=%d\n", params.Entity, len(params.Attributes))
 
 	if len(params.Attributes) == 0 {
 		return "", fmt.Errorf("attributes cannot be empty")
@@ -82,20 +84,28 @@ func (t *GenFieldTool) InvokableRun(ctx context.Context, args string, _ ...tool.
 		"attributes": make([]map[string]interface{}, 0),
 	}
 	for _, attribute := range params.Attributes {
-		entityConfig["attributes"] = append(entityConfig["attributes"].([]map[string]interface{}), map[string]interface{}{
+		attrMap := map[string]interface{}{
 			"attributeName": attribute.AttributeName,
 			"componentType": attribute.ComponentType,
 			"fieldName":     attribute.FieldName,
 			"fieldType":     attribute.FieldType,
 			"placeholder":   attribute.Placeholder,
 			"required":      attribute.Required,
-		})
+		}
+		if attribute.ComponentType == "select" {
+			attrMap["options"] = []map[string]string{
+				{"label": "Option 1", "value": "1"},
+				{"label": "Option 2", "value": "2"},
+			}
+		}
+		entityConfig["attributes"] = append(entityConfig["attributes"].([]map[string]interface{}), attrMap)
 	}
 
 	result, err := json.Marshal(entityConfig)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate field configurations: %w", err)
 	}
+	fmt.Printf("Generated field configurations: %s\n", string(result))
 
 	// Save to cache
 	userReq, ok := ctx.Value(config.StateKey).(*api.ChatRequest)

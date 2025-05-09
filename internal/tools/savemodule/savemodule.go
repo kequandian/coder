@@ -62,6 +62,7 @@ func (t *SaveModuleTool) InvokableRun(ctx context.Context, args string, _ ...too
 		return "", fmt.Errorf("failed to get cache")
 	}
 	infoCache := info.(*cache.ModuleCacheData)
+	log.Printf("Cache key: %v, Module info: %+v", cacheKey, infoCache)
 
 	// Create the request payload
 	payload := map[string]interface{}{

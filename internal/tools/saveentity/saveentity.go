@@ -86,6 +86,7 @@ func (t *SaveEntityTool) InvokableRun(ctx context.Context, args string, _ ...too
 			"props": map[string]interface{}{
 				"placeholder": attr["placeholder"],
 			},
+			"options": attr["options"],
 		}
 		if attr["required"] == true {
 			field["rules"] = []map[string]interface{}{{"type": "required"}}
@@ -271,11 +272,15 @@ func (t *SaveEntityTool) InvokableRun(ctx context.Context, args string, _ ...too
 	log.Printf("filedS: %s", body3)
 
 	// Store in cache
+	configJsonStr, err := json.Marshal(dynamicFormPayload["configJson"])
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal configJson: %w", err)
+	}
 	moduleCache := cache.NewModuleCacheData(
 		fmt.Sprint(dynamicFormPayload["moduleName"]),
 		fmt.Sprint(dynamicFormPayload["moduleCode"]),
-		fmt.Sprint(dynamicFormPayload["configJson"]),
-		fmt.Sprint(dynamicFormPayload["configJson"]),
+		string(configJsonStr),
+		string(configJsonStr),
 	)
 	cache.ModuleCacheInstance.Set(cacheKey, moduleCache, cache.DefaultCacheExpiration)
 
